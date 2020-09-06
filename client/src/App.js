@@ -6,6 +6,20 @@ import { BooksSearch } from "./pages/BooksSearch";
 import { Header } from "./components/Header";
 
 const App = () => {
+  const [favBooks, setFavBooks] = React.useState([]);
+
+
+
+
+  const addToFav = (book) => {
+    let tmp = [...favBooks]
+    tmp.push(book)
+    setFavBooks(tmp);
+
+    localStorage.setItem("favArr", JSON.stringify(favBooks))
+  }
+
+
   return (
     <div className={style.app}>
       <Header />
@@ -15,18 +29,18 @@ const App = () => {
             exact
             path="/search"
             render={(props) => (
-              <BooksSearch {...props} />
+              <BooksSearch/>
             )}
           />
           <Route
             exact
             path="/collections"
-            render={(props) => (<Collections {...props}/>)}
+            render={(props) => (<Collections/>)}
           />
           <Route
             path="/"
             render={(props) => (
-              <BooksSearch {...props}/>
+              <BooksSearch {...props} />
             )}
           />
         </Switch>
