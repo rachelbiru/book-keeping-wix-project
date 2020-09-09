@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { searchBooks } from "../../BooksApi";
 
-import {  BookCard } from "../BookCard";
+import { BookCard } from "../BookCard";
+import { } from '../Collections'
+import CollectionModal from "../CollectionCard";
 
 
 
 
-export const BooksSearch = () => {
+export const BooksSearch = ({ collections, addToCollection }) => {
 
   const [book, setBook] = useState();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
-
-
 
   const searchBooksByName = () => {
     searchBooks(book)
@@ -29,7 +29,7 @@ export const BooksSearch = () => {
       <input type="search" onChange={(e) => setBook(e.target.value)} />
       <button onClick={() => { searchBooksByName() }}>search</button>
 
-      <BookCard books={books}/>
+      <BookCard books={books} collections={collections}  addToCollection={addToCollection} />
 
     </section>
   );

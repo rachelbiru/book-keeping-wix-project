@@ -1,0 +1,32 @@
+.header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.drag-n-drop{
+    padding : .5rem;
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-auto-columns: repeat(auto-fill, 300px);
+
+}
+.dnd-group{
+    background-color: #555d6d;
+    border-radius: 5px;
+    padding : .5rem;
+}
+
+.dnd-item{
+    min-height: 150px;
+    background-color: white;
+    border-radius: 5px;;
+    color: #282c34;
+}
+
+.dnd-item * {
+ margin: 0;
+}

@@ -3,27 +3,45 @@ import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import Checkbox from '@material-ui/core/Checkbox';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
-
+import AddIcon from '@material-ui/icons/Add';
 import * as style from './BookCard.module.scss'
-
-
+import Modal from '@material-ui/core/Modal';
 
 import { getBookCoverByOLID } from "../../BooksApi";
 
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+    const top = 50 + rand();
+    const left = 50 + rand();
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
+
 
 const useStyles = makeStyles((theme) => ({
+    paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+
     root: {
         maxWidth: 130,
         maxHeight: 200,
@@ -64,54 +82,39 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const BookCard = ({ books }) => {
 
-    const red = "#ff0000";
-    const gray = "#808080";
+
+
+export const BookCard = ({ books, collections, addToCollection }) => {
+
 
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-    const [color, setColor] = useState(gray);
-    const [isChecked, setIsChecked] = useState();
+    const [favBook, setFavBook] = React.useState({});
 
+    const [modalStyle] = React.useState(getModalStyle);
+    const [open, setOpen] = React.useState(false);
 
-    const favBook = localStorage.hasOwnProperty('favArr')
-        ? JSON.parse(localStorage.getItem('favArr'))
-        : []
+    const handleOpen = (book) => {
+        setOpen(true);
+        setFavBook(book)
+    };
 
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-    useEffect(() => {
-        var currentColor = localStorage.getItem('isFav');
-        setColor(currentColor)
+    const body = (
+        <div style={modalStyle} className={classes.paper}>
+            {collections.map((collection,i) => (
+                <div key={i} onClick={()=>{addToCollection(collection, favBook)}}>
+                    <h6 id="simple-modal-title">{collection.name}</h6>
+                </div>
 
-        var isChecked = localStorage.getItem('readied');
-        setIsChecked(isChecked)
+            ))}
 
-    })
-
-    const addRemoveFavBook = (book, index) => {
-        if (color === red) {
-            favBook.push(book)
-            localStorage.setItem("favArr", JSON.stringify(favBook))
-
-        } else {
-            favBook.splice(index, 1)
-            localStorage.setItem("favArr", JSON.stringify(favBook))
-        }
-
-        changeColor();
-    }
-
-    const changeColor = () => {
-        const newColor = color === gray ? red : gray;
-        setColor(newColor);
-        localStorage.setItem("isFav", newColor)
-        return false;
-    }
-
-    const checkBoxHandler = (e) => {
-        localStorage.setItem('readied', e.target.checked)
-    }
+        </div>
+    );
 
 
     const handleExpandClick = (e) => {
@@ -120,6 +123,16 @@ export const BookCard = ({ books }) => {
     };
     return (
         <div className={style.showBooks}>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                {body}
+            </Modal>
+
+
             {books.map((book, index) => (
                 <Card key={index} className={classes.root} >
 
@@ -135,20 +148,11 @@ export const BookCard = ({ books }) => {
                     />
                     <p className={style.author_name}>Author Name: {book.author_name}</p>
 
-
-
-                    <CardActions className={style.icons} disableSpacing>
-
-                        <IconButton onClick={() => { addRemoveFavBook(book, index) }} aria-label="add to favorites">
-                            <FavoriteIcon style={{ color: color }} />
+                    <CardActions disableSpacing>
+                        <IconButton onClick={()=>{handleOpen(book)}}>
+                            <AddIcon />
                         </IconButton>
 
-                        <Checkbox
-                            defaultChecked={isChecked}
-                            onClick={() => checkBoxHandler}
-                            color="primary"
-                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                        />
 
                         <IconButton
                             className={clsx(classes.expand, {
@@ -163,6 +167,8 @@ export const BookCard = ({ books }) => {
                     </CardActions>
                 </Card>
             ))}
+
+
         </div>
     );
 };
