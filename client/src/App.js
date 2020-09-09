@@ -38,6 +38,7 @@ const App = () => {
   }
 
   const addNewCollection = (name) => {
+    console.log(name)
     let id;
 
     if (collections.length === 0) {
@@ -57,7 +58,9 @@ const App = () => {
   const deleteCollection = (index) => {
     let tmp = [...collections]
     tmp.splice(index, 1);
+    console.log(tmp)
     setCollections(tmp)
+    // window.location.reload(false)
   }
 
   const editCollection = (name, index) => {
@@ -67,9 +70,7 @@ const App = () => {
 
       tmp[index].name = name;
       setCollections(tmp)
-
     }
-
   }
 
 
@@ -97,12 +98,14 @@ const App = () => {
                 editCollection={editCollection}
               />)}
           />
+
           <Route
             path="/"
             render={(props) => (
               <BooksSearch {...props} />
             )}
           />
+
         </Switch>
       </main>
     </div>

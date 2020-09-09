@@ -43,14 +43,12 @@ const useStyles = makeStyles((theme) => ({
     },
 
     root: {
-        maxWidth: 130,
-        maxHeight: 200,
+        maxWidth: "26%",
         padding: 0,
         margin: "20px 8px auto",
         boxShadow: "1px 1px 5px",
         transition: "all 1s",
         padding: "5px",
-        display: "inline-block",
         '&:hover': {
             boxShadow: "3px 3px 3px",
             transform: "scale(1.05)",
@@ -60,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         textAlign: "left",
+        fontSize:"9px",
+        fontWeight:400,
+        minHeight:"45px",
+        lineHeight:1,
     },
 
     media: {
@@ -104,6 +106,11 @@ export const BookCard = ({ books, collections, addToCollection }) => {
         setOpen(false);
     };
 
+    
+    if(collections === undefined){
+        return [];
+    }
+
     const body = (
         <div style={modalStyle} className={classes.paper}>
             {collections.map((collection,i) => (
@@ -136,7 +143,7 @@ export const BookCard = ({ books, collections, addToCollection }) => {
             {books.map((book, index) => (
                 <Card key={index} className={classes.root} >
 
-                    <Typography className={classes.title} variant="body2" component="h4">
+                    <Typography className={classes.title} variant="body2" component="h6">
                         {book.title}
                     </Typography>
                     <p className={style.author_name}>Publish Year: {book.first_publish_year}</p>
@@ -148,7 +155,7 @@ export const BookCard = ({ books, collections, addToCollection }) => {
                     />
                     <p className={style.author_name}>Author Name: {book.author_name}</p>
 
-                    <CardActions disableSpacing>
+                    <CardActions className={style.cardMedia} disableSpacing>
                         <IconButton onClick={()=>{handleOpen(book)}}>
                             <AddIcon />
                         </IconButton>
