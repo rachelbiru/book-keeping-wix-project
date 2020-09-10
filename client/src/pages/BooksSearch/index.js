@@ -4,8 +4,6 @@ import { BookCard } from "../BookCard";
 
 import * as style from "./BooksSearch.module.scss";
 
-
-
 export const BooksSearch = ({ collections, addBookToCollection }) => {
 
   const [book, setBook] = useState();
@@ -18,7 +16,6 @@ export const BooksSearch = ({ collections, addBookToCollection }) => {
       .then((res) => {
         setLoading(false)
         setBooks(res.docs);
-        console.log(res.docs)
       })
       .catch(() => { console.log('some error') })
   }

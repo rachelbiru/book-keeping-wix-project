@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import * as style from "./App.module.scss";
 import { Switch, Route } from "react-router-dom";
 import { Collections } from './pages/Collections'
@@ -6,7 +6,7 @@ import { BooksSearch } from "./pages/BooksSearch";
 import { Header } from "./components/Header";
 
 const App = () => {
-  const [collections, setCollections] = React.useState([]);
+  const [collections, setCollections] = useState([]);
 
   let collectionState;
   useEffect(() => {
@@ -26,9 +26,7 @@ const App = () => {
     if (bookFind !== undefined) {
       tmp[i].books.push(book)
       setCollections(tmp);
-
     }
-
   }
 
   const deleteBook = (i, index) => {
@@ -48,7 +46,7 @@ const App = () => {
       // collection Array is NOT empty
       id = collections[collections.length - 1].id + 1
     }
-    const newCollection = { id: id, name: name, books: [] }
+    const newCollection = { id, name, books: [] }
 
     let tmp = [...collections]
     tmp.push(newCollection)

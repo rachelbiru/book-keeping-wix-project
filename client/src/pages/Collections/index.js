@@ -124,7 +124,7 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
   return (
     <div>
       <div style={{ margin: "10px" }}>
-        <Input type="text" onChange={(e) => { setNewCollectionName(e.target.value) }} />
+        <Input type="text" onChange={(e) => {setNewCollectionName(e.target.value);}} />
         <ButtonBase
           style={{ border: "1px solid black" }}
           onClick={() => {
