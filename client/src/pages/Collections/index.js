@@ -96,7 +96,6 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
   }
 
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
@@ -177,6 +176,7 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
                   <p className="p">Publish Year: {book.first_publish_year}</p>
                   <img className="img" src={getBookCoverByOLID(book.cover_edition_key)} alt="bookImage" />
                   <p>Author Name: {book.author_name}</p>
+
                 </div>
 
               ))}

@@ -11,6 +11,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import * as style from './BookCard.module.scss'
 import Modal from '@material-ui/core/Modal';
+import Collapse from '@material-ui/core/Collapse';
+import CardContent from '@material-ui/core/CardContent';
+
 
 import { getBookCoverByOLID } from "../../BooksApi";
 
@@ -45,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
         margin: "20px 17px auto",
         boxShadow: "1px 1px 5px",
-        transition: "all 1s",    
+        transition: "all 1s",
         padding: "5px",
         '&:hover': {
             boxShadow: "3px 3px 3px",
@@ -76,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     },
     expandOpen: {
         transform: 'rotate(180deg)',
-        color:"black"
+        color: "black"
     },
     avatar: {
         backgroundColor: red[500],
@@ -107,9 +110,9 @@ export const BookCard = ({ books, collections, addToCollection }) => {
 
     const sorted = [...books].sort((a, b) => {
         return b - a
-          });
+    });
 
-      console.log(sorted)
+    console.log(sorted)
 
     if (collections === undefined) {
         return [];
@@ -121,14 +124,14 @@ export const BookCard = ({ books, collections, addToCollection }) => {
                 style={{ display: 'flex', flexDirection: 'row-reverse' }}
                 className="far fa-window-close"
                 onClick={() => { handleClose() }}>
-                </i>
+            </i>
 
             {collections.map((collection, i) => (
-                    <div key={i} onClick={() => { addToCollection(collection,i,favBook) }}>
-                        <button className={style.btnA} id="simple-modal-title">{collection.name}</button>
-                    </div>
+                <div key={i} onClick={() => { addToCollection(collection, i, favBook) }}>
+                    <button className={style.btnA} id="simple-modal-title">{collection.name}</button>
+                </div>
 
-                ))
+            ))
             }
 
         </div >
@@ -139,6 +142,9 @@ export const BookCard = ({ books, collections, addToCollection }) => {
         e.preventDefault()
         setExpanded(!expanded);
     };
+
+
+
     return (
         <div className={style.showBooks}>
             <Modal
@@ -170,7 +176,6 @@ export const BookCard = ({ books, collections, addToCollection }) => {
                         <IconButton onClick={() => { handleOpen(book) }}>
                             <AddIcon />
                         </IconButton>
-
 
                         <IconButton
                             className={clsx(classes.expand, {

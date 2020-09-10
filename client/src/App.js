@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import { Collections } from './pages/Collections'
 import { BooksSearch } from "./pages/BooksSearch";
 import { Header } from "./components/Header";
+import DndTest from "./pages/Dnd/dndTest";
 
 const App = () => {
   const [collections, setCollections] = React.useState([]);
@@ -54,11 +55,9 @@ const App = () => {
     let tmp = [...collections]
     tmp.push(newCollection)
     console.log(tmp)
-     setCollections(tmp);
+    setCollections(tmp);
 
   }
-  console.log(collections)
-
 
   const deleteCollection = (index) => {
     let tmp = [...collections]
@@ -106,12 +105,18 @@ const App = () => {
           />
 
           <Route
+            path="/test"
+            render={(props) => (
+              <DndTest coll={collections} />
+            )}
+          />
+
+          <Route
             path="/"
             render={(props) => (
               <BooksSearch {...props} />
             )}
           />
-
         </Switch>
       </main>
     </div>
