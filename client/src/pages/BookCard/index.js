@@ -11,8 +11,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
 import * as style from './BookCard.module.scss'
 import Modal from '@material-ui/core/Modal';
-import Collapse from '@material-ui/core/Collapse';
-import CardContent from '@material-ui/core/CardContent';
+
 
 
 import { getBookCoverByOLID } from "../../BooksApi";
@@ -108,12 +107,6 @@ export const BookCard = ({ books, collections, addToCollection }) => {
         setOpen(false);
     };
 
-    const sorted = [...books].sort((a, b) => {
-        return b - a
-    });
-
-    console.log(sorted)
-
     if (collections === undefined) {
         return [];
     }
@@ -142,7 +135,6 @@ export const BookCard = ({ books, collections, addToCollection }) => {
         e.preventDefault()
         setExpanded(!expanded);
     };
-
 
 
     return (

@@ -4,7 +4,6 @@ import { Switch, Route } from "react-router-dom";
 import { Collections } from './pages/Collections'
 import { BooksSearch } from "./pages/BooksSearch";
 import { Header } from "./components/Header";
-import DndTest from "./pages/Dnd/dndTest";
 
 const App = () => {
   const [collections, setCollections] = React.useState([]);
@@ -40,10 +39,9 @@ const App = () => {
   }
 
   const addNewCollection = (name) => {
-    console.log(name)
     let id;
 
-    if (collections.length === 0) {
+    if (!collections.length) {
       // collection Array is empty
       id = 0
     } else {
@@ -54,9 +52,7 @@ const App = () => {
 
     let tmp = [...collections]
     tmp.push(newCollection)
-    console.log(tmp)
     setCollections(tmp);
-
   }
 
   const deleteCollection = (index) => {
@@ -75,7 +71,7 @@ const App = () => {
   }
 
   const sendList = (list) => {
-    setCollections(list)
+    return setCollections(list)
   }
 
   return (
@@ -102,13 +98,6 @@ const App = () => {
                 editCollection={editCollection}
                 sendList={sendList}
               />)}
-          />
-
-          <Route
-            path="/test"
-            render={(props) => (
-              <DndTest coll={collections} />
-            )}
           />
 
           <Route

@@ -38,12 +38,14 @@ const useStyles = makeStyles((theme) => ({
 export const Collections = ({ collectionsArr, deleteBook, addNewCollection, deleteCollection, editCollection, sendList }) => {
   const [list, setList] = useState(collectionsArr);
   const [newCollectionName, setNewCollectionName] = useState()
+
   const [dragging, setDragging] = useState(false);
   const [collEdit, setCollEdit] = useState()
   const [collIndex, setCollIndex] = useState(Number)
 
   const dragBook = useRef();
   const dragNode = useRef();
+
 
   useEffect(()=>{
     setList(collectionsArr)
@@ -126,7 +128,6 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
         <ButtonBase
           style={{ border: "1px solid black" }}
           onClick={() => {
-            console.log(list)
             addNewCollection(newCollectionName); 
           }} >ADD Collections</ButtonBase>
       </div>
@@ -142,7 +143,6 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
         </Modal>
       </div>
       <header className="header">
-
         <div className="drag-n-drop">
           {list.map((collection, indexColl) => (
             <div
@@ -152,7 +152,7 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
             >
 
               <div className="group-title">
-                <i className="fas fa-backspace" onClick={() => {deleteCollection(indexColl) }}></i>
+                <i className="fas fa-backspace" onClick={() => {deleteCollection(indexColl);}}></i>
                 <br></br>
                 <i className="fas fa-edit" onClick={() => {
                   setCollEdit(collection);
