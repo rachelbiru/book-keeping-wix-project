@@ -6,11 +6,9 @@ import { BooksSearch } from "./pages/BooksSearch";
 import { Header } from "./components/Header";
 
 const App = () => {
-  const [favBooks, setFavBooks] = React.useState([]);
   const [collections, setCollections] = React.useState([]);
 
   let collectionState;
-
   useEffect(() => {
     collectionState = [
       { id: 0, name: "favorite", books: [] },
@@ -21,18 +19,21 @@ const App = () => {
   }, []);
 
 
-  const addToCollection = (collection, book) => {
-    const tmp = [...collections]
-    const bookIndex = tmp.findIndex(collec => { return collec.id === collection.id; })
-    if (bookIndex !== -1) {
-      tmp[collection.id].books.push(book)
+  const addBookToCollection = (collection, i, book) => {
+    let tmp = [...collections]
+    const bookFind = tmp.find(collec => { return collec.id === collection.id; })
+
+    if (bookFind !== undefined) {
+      tmp[i].books.push(book)
       setCollections(tmp);
 
     }
+
   }
 
   const deleteBook = (i, index) => {
     let tmp = [...collections]
+
     tmp[i].books.splice(index, 1);
     setCollections(tmp);
   }
@@ -52,27 +53,31 @@ const App = () => {
 
     let tmp = [...collections]
     tmp.push(newCollection)
-    setCollections(tmp)
+    console.log(tmp)
+     setCollections(tmp);
+
   }
+  console.log(collections)
+
 
   const deleteCollection = (index) => {
     let tmp = [...collections]
     tmp.splice(index, 1);
-    console.log(tmp)
     setCollections(tmp)
-    // window.location.reload(false)
   }
 
-  const editCollection = (name, index) => {
+  const editCollection = (name, coll, i) => {
     let tmp = [...collections]
-    const bookIndex = tmp.findIndex(collection => { return collection.id === index });
-    if (bookIndex !== -1) {
-
-      tmp[index].name = name;
+    const collec = tmp.find(collection => { return collection.id === coll.id });
+    if (collec !== undefined) {
+      tmp[i].name = name;
       setCollections(tmp)
     }
   }
 
+  const sendList = (list) => {
+    setCollections(list)
+  }
 
   return (
     <div className={style.app}>
@@ -83,7 +88,7 @@ const App = () => {
             exact
             path="/search"
             render={(props) => (
-              <BooksSearch collections={collections} addToCollection={addToCollection} />
+              <BooksSearch collections={collections} addBookToCollection={addBookToCollection} />
             )}
           />
           <Route
@@ -96,6 +101,7 @@ const App = () => {
                 addNewCollection={addNewCollection}
                 deleteCollection={deleteCollection}
                 editCollection={editCollection}
+                sendList={sendList}
               />)}
           />
 

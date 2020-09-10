@@ -1,27 +1,53 @@
-import React, { useState, useRef, useEffect } from "react";
-// import * as style from "./Collections.module.scss";
-import { getBookCoverByOLID } from "../../BooksApi";
-
+import React, { useState, useRef, useReducer, useEffect } from "react";
 import Input from '@material-ui/core/Input';
 import { ButtonBase } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+
+import { getBookCoverByOLID } from "../../BooksApi";
 
 import './index.css'
 
-export const Collections = ({ collectionsArr, deleteBook, addNewCollection, deleteCollection, editCollection }) => {
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
+
+
+export const Collections = ({ collectionsArr, deleteBook, addNewCollection, deleteCollection, editCollection, sendList }) => {
   const [list, setList] = useState(collectionsArr);
   const [newCollectionName, setNewCollectionName] = useState()
   const [dragging, setDragging] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false)
+  const [collEdit, setCollEdit] = useState()
   const [collIndex, setCollIndex] = useState(Number)
-
-  useEffect(()=>{
-    setList(list)
-  })
-
-
 
   const dragBook = useRef();
   const dragNode = useRef();
+
+  useEffect(()=>{
+    setList(collectionsArr)
+  }, [])
 
 
   const handleDragStart = (e, params) => {
@@ -44,7 +70,8 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
       setList(oldList => {
         let newList = JSON.parse(JSON.stringify(oldList));
         newList[params.indexColl].books.splice(params.indexBook, 0, newList[currentBook.indexColl].books.splice(currentBook.indexBook, 1)[0]);
-        dragBook.current = params
+        dragBook.current = params;
+        sendList(newList)
         return newList
       })
     }
@@ -68,17 +95,54 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
     return 'dnd-item'
   }
 
+  const classes = useStyles();
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const body = (
+    <div style={modalStyle} className={classes.paper}>
+      <input type="text" onChange={(e) => setNewCollectionName(e.target.value)} />
+      <button onClick={() => {
+        editCollection(newCollectionName, collEdit, collIndex);
+        handleClose();
+        setList(collectionsArr)
+      }}>Edit Collection</button>
+    </div>
+  );
+
 
   return (
     <div>
-      <div>
+      <div style={{ margin: "10px" }}>
         <Input type="text" onChange={(e) => { setNewCollectionName(e.target.value) }} />
-        {isUpdate ?
-          <ButtonBase onClick={() => { editCollection(newCollectionName, collIndex) }}>UPdate</ButtonBase> :
-          <ButtonBase onClick={() => { addNewCollection(newCollectionName) }} >ADD Collections</ButtonBase>}
+        <ButtonBase
+          style={{ border: "1px solid black" }}
+          onClick={() => {
+            console.log(list)
+            addNewCollection(newCollectionName); 
+          }} >ADD Collections</ButtonBase>
+      </div>
+
+      <div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          {body}
+        </Modal>
       </div>
       <header className="header">
-
 
         <div className="drag-n-drop">
           {list.map((collection, indexColl) => (
@@ -89,10 +153,12 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
             >
 
               <div className="group-title">
-                <i class="fas fa-backspace" onClick={() => { deleteCollection(indexColl) }}></i>
-                <i class="fas fa-edit" onClick={() => {
+                <i className="fas fa-backspace" onClick={() => {deleteCollection(indexColl) }}></i>
+                <br></br>
+                <i className="fas fa-edit" onClick={() => {
+                  setCollEdit(collection);
                   setCollIndex(indexColl)
-                  setIsUpdate(true)
+                  handleOpen()
                 }}></i>
                 {collection.name}
               </div>
@@ -106,12 +172,10 @@ export const Collections = ({ collectionsArr, deleteBook, addNewCollection, dele
                   key={indexBook}
                   className={dragging ? getStyles({ indexColl, indexBook }) : "dnd-item"}
                 >
-                  <i class="far fa-trash-alt" onClick={() => { deleteBook(indexColl, indexBook) }}></i>
+                  <i className="far fa-trash-alt" onClick={() => {deleteBook(indexColl, indexBook)}}></i>
                   <h6>{book.title}</h6>
                   <p className="p">Publish Year: {book.first_publish_year}</p>
-
                   <img className="img" src={getBookCoverByOLID(book.cover_edition_key)} alt="bookImage" />
-
                   <p>Author Name: {book.author_name}</p>
                 </div>
 

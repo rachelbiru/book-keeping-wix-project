@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -7,9 +7,7 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import * as style from './BookCard.module.scss'
 import Modal from '@material-ui/core/Modal';
@@ -45,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: "26%",
         padding: 0,
-        margin: "20px 8px auto",
+        margin: "20px 17px auto",
         boxShadow: "1px 1px 5px",
-        transition: "all 1s",
+        transition: "all 1s",    
         padding: "5px",
         '&:hover': {
             boxShadow: "3px 3px 3px",
@@ -58,10 +56,10 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         textAlign: "left",
-        fontSize:"9px",
-        fontWeight:400,
-        minHeight:"45px",
-        lineHeight:1,
+        fontSize: "9px",
+        fontWeight: 400,
+        minHeight: "45px",
+        lineHeight: 1,
     },
 
     media: {
@@ -78,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
     },
     expandOpen: {
         transform: 'rotate(180deg)',
+        color:"black"
     },
     avatar: {
         backgroundColor: red[500],
@@ -106,21 +105,33 @@ export const BookCard = ({ books, collections, addToCollection }) => {
         setOpen(false);
     };
 
-    
-    if(collections === undefined){
+    const sorted = [...books].sort((a, b) => {
+        return b - a
+          });
+
+      console.log(sorted)
+
+    if (collections === undefined) {
         return [];
     }
 
     const body = (
         <div style={modalStyle} className={classes.paper}>
-            {collections.map((collection,i) => (
-                <div key={i} onClick={()=>{addToCollection(collection, favBook)}}>
-                    <h6 id="simple-modal-title">{collection.name}</h6>
-                </div>
+            <i
+                style={{ display: 'flex', flexDirection: 'row-reverse' }}
+                className="far fa-window-close"
+                onClick={() => { handleClose() }}>
+                </i>
 
-            ))}
+            {collections.map((collection, i) => (
+                    <div key={i} onClick={() => { addToCollection(collection,i,favBook) }}>
+                        <button className={style.btnA} id="simple-modal-title">{collection.name}</button>
+                    </div>
 
-        </div>
+                ))
+            }
+
+        </div >
     );
 
 
@@ -156,7 +167,7 @@ export const BookCard = ({ books, collections, addToCollection }) => {
                     <p className={style.author_name}>Author Name: {book.author_name}</p>
 
                     <CardActions className={style.cardMedia} disableSpacing>
-                        <IconButton onClick={()=>{handleOpen(book)}}>
+                        <IconButton onClick={() => { handleOpen(book) }}>
                             <AddIcon />
                         </IconButton>
 

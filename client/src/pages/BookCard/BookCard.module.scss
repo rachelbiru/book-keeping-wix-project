@@ -5,7 +5,6 @@
     margin: 10px auto;
     padding: 0;
     font-family: 'Oswald', sans-serif;
-    background-color: green;
     display: flex;
     flex-wrap: wrap;
 }
@@ -41,5 +40,10 @@
 .modalShowing-true{
     opacity: 1;
     pointer-events: showing;
+}
+
+.btnA{
+    width: 29%;
+    margin: 5px;
 }
 
